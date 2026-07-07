@@ -1,0 +1,33 @@
+{
+  "name": "copy_claims_landing_to_archive",
+  "properties": {
+    "activities": [
+      {
+        "name": "GetLandingFiles",
+        "type": "GetMetadata",
+        "typeProperties": {
+          "dataset": { "referenceName": "LandingContainer", "type": "DatasetReference" },
+          "fieldList": ["childItems"]
+        }
+      },
+      {
+        "name": "CopyToArchive",
+        "type": "Copy",
+        "dependsOn": [{ "activity": "GetLandingFiles", "dependencyConditions": ["Succeeded"] }],
+        "typeProperties": {
+          "source": {
+            "type": "DelimitedTextSource",
+            "storeSettings": {
+              "type": "AzureBlobFSReadSettings",
+              "recursive": true,
+              "wildcardFileName": "*.csv"
+            }
+          },
+          "sink": { "type": "ParquetSink" }
+        },
+        "inputs": [{ "referenceName": "LandingCsv", "type": "DatasetReference" }],
+        "outputs": [{ "referenceName": "ArchiveParquet", "type": "DatasetReference" }]
+      }
+    ]
+  }
+}

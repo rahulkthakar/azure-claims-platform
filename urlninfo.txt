@@ -1,0 +1,4 @@
+data_factory_name = "azclaims-adf"
+databricks_workspace_url = "adb-7405611396130550.10.azuredatabricks.net"
+resource_group_name = "azclaims-rg"
+storage_account_name = "azclaimslake"

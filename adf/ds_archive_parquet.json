@@ -1,0 +1,5 @@
+{
+  "type": "Parquet",
+  "linkedServiceName": { "referenceName": "AdlsLinkedService", "type": "LinkedServiceReference" },
+  "typeProperties": { "location": { "type": "AzureBlobFSLocation", "fileSystem": "archive" } }
+}

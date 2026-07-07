@@ -1,0 +1,11 @@
+// Paste these into Power BI Desktop: Modeling -> New Measure (one at a time).
+// Data source: azclaims.gold.fct_claims_daily (connect via Databricks connector,
+// or SQL editor -> Download CSV -> Get Data -> Text/CSV if the connector needs setup).
+
+Total Claims = SUM(fct_claims_daily[total_claim_amount])
+
+Open Exposure = CALCULATE([Total Claims], fct_claims_daily[status] = "OPEN")
+
+Avg Claim = DIVIDE([Total Claims], SUM(fct_claims_daily[claim_count]))
+
+Claim Count = SUM(fct_claims_daily[claim_count])

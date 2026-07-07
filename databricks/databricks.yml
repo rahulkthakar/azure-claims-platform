@@ -1,0 +1,35 @@
+# Deploy this job as CODE (no clicking): databricks bundle validate / deploy / run
+bundle:
+  name: azure-claims-platform
+
+resources:
+  jobs:
+    claims_pipeline:
+      name: "azure-claims-pipeline-${bundle.target}"
+      tasks:
+        - task_key: setup
+          notebook_task: { notebook_path: ./notebooks/00_setup.py }
+        - task_key: bronze
+          depends_on: [{task_key: setup}]
+          notebook_task: { notebook_path: ./notebooks/02_bronze_copy_into.py }
+        - task_key: silver
+          depends_on: [{task_key: bronze}]
+          notebook_task: { notebook_path: ./notebooks/04_silver_quarantine.py }
+        - task_key: gold
+          depends_on: [{task_key: silver}]
+          notebook_task: { notebook_path: ./notebooks/07_gold_star_schema.py }
+      job_clusters:
+        - job_cluster_key: main
+          new_cluster:
+            spark_version: 15.4.x-scala2.12
+            node_type_id: Standard_DS3_v2
+            num_workers: 1
+            custom_tags: {project: azure-claims-platform}
+
+targets:
+  dev:
+    default: true
+    workspace: { host: https://REPLACE-ME.azuredatabricks.net }
+  prod:
+    mode: production
+    workspace: { host: https://REPLACE-ME-PROD.azuredatabricks.net }

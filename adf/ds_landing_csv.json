@@ -1,0 +1,12 @@
+{
+  "type": "DelimitedText",
+  "linkedServiceName": { "referenceName": "AdlsLinkedService", "type": "LinkedServiceReference" },
+  "typeProperties": {
+    "location": {
+      "type": "AzureBlobFSLocation",
+      "fileSystem": "landing"
+    },
+    "columnDelimiter": ",",
+    "firstRowAsHeader": true
+  }
+}

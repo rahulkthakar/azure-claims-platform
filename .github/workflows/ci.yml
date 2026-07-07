@@ -1,0 +1,29 @@
+name: ci
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  lint-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.11"}
+      - name: Install deps
+        run: pip install pyspark==3.5.1 pytest ruff
+      - name: Lint
+        run: ruff check databricks/tests
+      - name: Unit tests (local PySpark)
+        run: cd databricks/tests && PYTHONPATH=. pytest test_transforms.py -v
+
+  terraform-validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+      - run: terraform -chdir=terraform fmt -check -recursive
+      - run: |
+          terraform -chdir=terraform init -backend=false
+          terraform -chdir=terraform validate
