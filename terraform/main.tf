@@ -7,9 +7,9 @@ terraform {
   }
 }
 
-provider "azurerm" { 
-  features {} 
-  }
+provider "azurerm" {
+  features {}
+}
 
 locals {
   tags = {
@@ -48,7 +48,7 @@ resource "azurerm_storage_account" "lake" {
   location                 = azurerm_resource_group.rg.location
   account_tier             = "Standard"
   account_replication_type = "LRS"
-  is_hns_enabled           = true         # ADLS Gen2
+  is_hns_enabled           = true # ADLS Gen2
   min_tls_version          = "TLS1_2"
   tags                     = local.tags
 }
@@ -77,6 +77,6 @@ resource "azurerm_databricks_workspace" "dbx" {
   name                = "${var.prefix}-dbx"
   resource_group_name = azurerm_resource_group.rg.name
   location            = azurerm_resource_group.rg.location
-  sku                 = "premium"          # premium = Unity Catalog / RBAC features
+  sku                 = "premium" # premium = Unity Catalog / RBAC features
   tags                = local.tags
 }
